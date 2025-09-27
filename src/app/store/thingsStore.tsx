@@ -33,7 +33,7 @@ export const useThingsStore = create<ThingsState>()(
           id: new Date().toISOString(),
           title,
           items: [],
-          order: get().things.length + 1,
+          order: get().things.length,
           trashed: false,
         };
         set({ things: [...get().things, newThing] });

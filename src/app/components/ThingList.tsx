@@ -7,7 +7,7 @@ import AutoWidthInput from "./AutoWidthInput";
 import { Trash } from "lucide-react";
 
 import { useEffect, useState } from "react";
-import { addThing } from "../firebase/addThing";
+// import { addThing } from "../firebase/addThing";
 import { getThings } from "../firebase/getThings";
 import { Thing } from "../types";
 
@@ -36,7 +36,7 @@ export default function ThingList() {
 
   // const things = useThingsStore((state) => state.things);
   const view = useThingsStore((state) => state.view);
-  // const addThing = useThingsStore((state) => state.addThing);
+  const addThing = useThingsStore((state) => state.addThing);
   // const toggleTrash = useThingsStore((state) => state.toggleTrash);
   // const moveUp = useThingsStore((state) => state.moveUp);
   // const moveDown = useThingsStore((state) => state.moveDown);
@@ -60,13 +60,13 @@ export default function ThingList() {
           />
           <button
             className="bg-slate-900 text-white px-6 py-2 rounded hover:opacity-50"
-            onClick={() => addThing(things.length)}
-            // onClick={() => {
-            //   if (newTitle.trim()) {
-            //     addThing(newTitle.trim());
-            //     setNewTitle("");
-            //   }
-            // }}
+            // onClick={() => addThing(things.length)}
+            onClick={() => {
+              if (newTitle.trim()) {
+                addThing(newTitle.trim());
+                setNewTitle("");
+              }
+            }}
           >
             追加
           </button>

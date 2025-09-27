@@ -2,13 +2,13 @@ import { collection, addDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
 // 2. Firestore に保存
-export async function addThing(thingsLength: number) {
+export async function addThing(title: string) {
   try {
     const docRef = await addDoc(collection(db, "things"), {
       id: Date.now().toString(),
-      title: "新しいThing",
+      title,
       items: [],
-      order: thingsLength,
+      order: 0,
       trashed: false,
       createdAt: new Date(),
     });
