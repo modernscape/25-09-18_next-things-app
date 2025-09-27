@@ -1,15 +1,11 @@
 // components/ThingList.tsx
 "use client";
 
+import { useState } from "react";
 import { useThingsStore } from "../store/thingsStore";
 import { cva } from "class-variance-authority";
 import AutoWidthInput from "./AutoWidthInput";
 import { Trash } from "lucide-react";
-
-import { useEffect, useState } from "react";
-import { addThing } from "../firebase/addThing";
-import { getThings } from "../firebase/getThings";
-import { Thing } from "../types";
 
 const circleBtn = cva(
   "flex items-center justify-center rounded-full leading-none w-8 h-8 text-base bg-blue-500 text-white inline-block ml-2",
@@ -25,24 +21,16 @@ const circleBtn = cva(
 );
 
 export default function ThingList() {
-  const [things, setThings] = useState<Thing[]>([]);
-
-  // []なので初回のみ実行
-  useEffect(() => {
-    getThings().then(setThings);
-  }, []);
-
-  const [newTitle, setNewTitle] = useState("");
-
-  // const things = useThingsStore((state) => state.things);
+  const things = useThingsStore((state) => state.things);
   const view = useThingsStore((state) => state.view);
-  // const addThing = useThingsStore((state) => state.addThing);
-  // const toggleTrash = useThingsStore((state) => state.toggleTrash);
-  // const moveUp = useThingsStore((state) => state.moveUp);
-  // const moveDown = useThingsStore((state) => state.moveDown);
-  // const updateThingTitle = useThingsStore((state) => state.updateThingTitle);
-  // const addItem = useThingsStore((state) => state.addItem);
-  // const updateItem = useThingsStore((state) => state.updateItem);
+  const addThing = useThingsStore((state) => state.addThing);
+  const toggleTrash = useThingsStore((state) => state.toggleTrash);
+  const moveUp = useThingsStore((state) => state.moveUp);
+  const moveDown = useThingsStore((state) => state.moveDown);
+  const updateThingTitle = useThingsStore((state) => state.updateThingTitle);
+  const [newTitle, setNewTitle] = useState("");
+  const addItem = useThingsStore((state) => state.addItem);
+  const updateItem = useThingsStore((state) => state.updateItem);
 
   const filtered = things.filter((t) => (view === "all" ? !t.trashed : t.trashed));
 
@@ -60,13 +48,12 @@ export default function ThingList() {
           />
           <button
             className="bg-slate-900 text-white px-6 py-2 rounded hover:opacity-50"
-            onClick={() => addThing(things.length)}
-            // onClick={() => {
-            //   if (newTitle.trim()) {
-            //     addThing(newTitle.trim());
-            //     setNewTitle("");
-            //   }
-            // }}
+            onClick={() => {
+              if (newTitle.trim()) {
+                addThing(newTitle.trim());
+                setNewTitle("");
+              }
+            }}
           >
             追加
           </button>
