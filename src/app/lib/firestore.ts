@@ -1,5 +1,5 @@
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "firebase/firestore";
-import { db } from "../firebase/firebase";
+import { db } from "./firebase";
 import { Thing } from "@/types";
 import { create } from "domain";
 import { KEYS } from "@/constants/keys";
@@ -14,8 +14,11 @@ export async function addThing(title: string) {
   });
 }
 
-// Read
+// Read (購読)
+export function subscribeThings() {}
 
 // Update
+export function updateThing() {}
 
 // Delete
+export function deleteThing() {}

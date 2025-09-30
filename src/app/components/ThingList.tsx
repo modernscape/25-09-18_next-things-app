@@ -44,6 +44,8 @@ export default function ThingList() {
   // const addItem = useThingsStore((state) => state.addItem);
   // const updateItem = useThingsStore((state) => state.updateItem);
 
+  useEffect(() => {});
+
   const filtered = things.filter((t) => (view === "all" ? !t.trashed : t.trashed));
 
   return (
