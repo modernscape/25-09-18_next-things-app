@@ -1,12 +1,10 @@
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase";
 import { Thing } from "@/types";
-import { create } from "domain";
-import { KEYS } from "@/constants/keys";
 
 // Create
 export async function addThing(title: string) {
-  return await addDoc(collection(db, KEYS.THINGS), {
+  return await addDoc(collection(db, "things"), {
     title,
     items: [],
     trashed: false,
