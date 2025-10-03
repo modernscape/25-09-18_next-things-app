@@ -1,4 +1,4 @@
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "firebase/firestore";
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "./firebase";
 import { Thing } from "@/types";
 
@@ -13,7 +13,13 @@ export async function addThing(title: string) {
 }
 
 // Read (購読)
-export function subscribeThings() {}
+export function subscribeThings(callback: (things: Thing[]) => void) {
+  const q = query(collection(db, "things"), orderBy("createdAt", "asc"));
+  return onSnapshot(q, (snapshot) => {
+    const data = snapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() } as Thing));
+    callback(data);
+  });
+}
 
 // Update
 export function updateThing() {}

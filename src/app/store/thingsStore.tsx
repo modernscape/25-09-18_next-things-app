@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { KEYS } from "@/constants/keys";
 
 export interface Thing {
   id: string;
@@ -12,7 +11,7 @@ export interface Thing {
 
 interface ThingsState {
   things: Thing[];
-  view: typeof KEYS.ALL | typeof KEYS.TRASH;
+  view: "all" | "trash";
   addThing: (title: string) => void;
   toggleTrash: (id: string) => void;
   setView: (view: "all" | "trash") => void;
