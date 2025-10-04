@@ -11,6 +11,7 @@ export interface Thing {
 
 interface ThingsState {
   things: Thing[];
+  setThings: (things: Thing[]) => void;
   view: "all" | "trash";
   addThing: (title: string) => void;
   toggleTrash: (id: string) => void;
@@ -26,6 +27,9 @@ export const useThingsStore = create<ThingsState>()(
   persist(
     (set, get) => ({
       things: [],
+      setThings: (things) => {
+        set({ things });
+      },
       view: "all",
       setView: (view: "all" | "trash") => set({ view }),
       addThing: (title: string) => {

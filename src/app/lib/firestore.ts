@@ -22,7 +22,13 @@ export function subscribeThings(callback: (things: Thing[]) => void) {
 }
 
 // Update
-export function updateThing() {}
+export async function updateThing(id: string, newData: Partial<Thing>) {
+  const ref = doc(db, "thing", id);
+  await updateDoc(ref, newData);
+}
 
 // Delete
-export function deleteThing() {}
+export async function deleteThing(id: string) {
+  const ref = doc(db, "things", id);
+  await deleteDoc(ref);
+}

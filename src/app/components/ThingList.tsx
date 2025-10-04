@@ -1,6 +1,7 @@
 // components/ThingList.tsx
 "use client";
 
+import { updateThing, deleteThing, addThing, subscribeThings } from "../lib/firestore";
 import { useThingsStore } from "../store/thingsStore";
 import { cva } from "class-variance-authority";
 import AutoWidthInput from "./AutoWidthInput";
@@ -25,7 +26,11 @@ const circleBtn = cva(
 );
 
 export default function ThingList() {
-  const [things, setThings] = useState<Thing[]>([]);
+  // const [things, setThings] = useState<Thing[]>([]);
+  const things = useThingsStore((state) => state.things);
+  const setThings = useThingsStore((state) => state.setThings);
+
+  // 25-10-04_1120
 
   // []なので初回のみ実行
   useEffect(() => {
