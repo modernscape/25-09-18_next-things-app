@@ -30,7 +30,7 @@ export default function ThingList() {
   const things = useThingsStore((state) => state.things);
   const setThings = useThingsStore((state) => state.setThings);
 
-  // 25-10-04_1120
+  // NOW
 
   // []なので初回のみ実行
   useEffect(() => {
