@@ -1,6 +1,6 @@
 // components/Sidebar.tsx
 "use client";
-import { useThingsStore } from "../store/thingsStore";
+import { useThingsStore } from "../store/thingsStore_new";
 import { Trash } from "lucide-react";
 
 export default function Sidebar() {
