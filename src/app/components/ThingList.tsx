@@ -1,11 +1,16 @@
 // components/ThingList.tsx
 "use client";
 
-import { useState } from "react";
-import { useThingsStore } from "../store/thingsStore_new";
+import { updateThing, deleteThing, addThing, subscribeThings } from "../lib/firestore";
+import { useThingsStore } from "../store/thingsStore";
 import { cva } from "class-variance-authority";
 import AutoWidthInput from "./AutoWidthInput";
 import { Trash } from "lucide-react";
+
+import { useEffect, useState } from "react";
+// import { addThing } from "../firebase/addThing";
+import { getThings } from "../firebase/getThings";
+import { Thing } from "../types";
 
 const circleBtn = cva(
   "flex items-center justify-center rounded-full leading-none w-8 h-8 text-base bg-blue-500 text-white inline-block ml-2",
@@ -21,22 +26,35 @@ const circleBtn = cva(
 );
 
 export default function ThingList() {
+  // const [things, setThings] = useState<Thing[]>([]);
   const things = useThingsStore((state) => state.things);
+  const setThings = useThingsStore((state) => state.setThings);
+
+  // const things = useThingsStore((state) => state.things);
   const view = useThingsStore((state) => state.view);
   const addThing = useThingsStore((state) => state.addThing);
+
   const toggleTrash = useThingsStore((state) => state.toggleTrash);
-  const moveUp = useThingsStore((state) => state.moveUp);
-  const moveDown = useThingsStore((state) => state.moveDown);
-  const updateThingTitle = useThingsStore((state) => state.updateThingTitle);
+  // const moveUp = useThingsStore((state) => state.moveUp);
+  // const moveDown = useThingsStore((state) => state.moveDown);
+  // const updateThingTitle = useThingsStore((state) => state.updateThingTitle);
+  // const addItem = useThingsStore((state) => state.addItem);
+  // const updateItem = useThingsStore((state) => state.updateItem);
+
+  // []なので初回のみ実行
+  useEffect(() => {
+    const unsubscribe = subscribeThings(setThings);
+    return () => unsubscribe();
+  }, [setThings]);
+
   const [newTitle, setNewTitle] = useState("");
-  const addItem = useThingsStore((state) => state.addItem);
-  const updateItem = useThingsStore((state) => state.updateItem);
 
   const filtered = things.filter((t) => (view === "all" ? !t.trashed : t.trashed));
 
   return (
     <div style={{ padding: "1rem", flex: 1 }}>
       {view === "all" && (
+        // （1）Thing追加フォーム
         <div style={{ marginBottom: "1rem" }} className="flex">
           <input
             type="text"
@@ -49,10 +67,7 @@ export default function ThingList() {
           <button
             className="bg-slate-900 text-white px-6 py-2 rounded hover:opacity-50"
             onClick={() => {
-              if (newTitle.trim()) {
-                addThing(newTitle.trim());
-                setNewTitle("");
-              }
+              addThing(newTitle);
             }}
           >
             追加
@@ -60,10 +75,12 @@ export default function ThingList() {
         </div>
       )}
 
+      {/* （2）Thing一覧 */}
       {filtered.map((t, i) => (
         <div key={t.id} className="border border-[#ddd] p-2 mb-2">
           <div className=" text-3xl font-bold mb-4">
-            <AutoWidthInput value={t.title} onConfirm={(val) => updateThingTitle(t.id, val)} font="inherit" />
+            {/* タイトル変更 */}
+            <AutoWidthInput value={t.title} onConfirm={(val) => updateThing(t.id, { title: val })} font="inherit" />
           </div>
           {/* <input
             className="text-2xl font-bold"
@@ -77,6 +94,8 @@ export default function ThingList() {
               }
             }}
           /> */}
+
+          {/* （3）アイテム一覧 */}
           <ul className="flex gap-4 mb-4 text-[20px]">
             {t.items.map((item) => {
               return (
@@ -90,6 +109,7 @@ export default function ThingList() {
             </button>
           </ul>
 
+          {/* Thing「ゴミ箱（復元）」ボタン */}
           <div className="flex">
             <button className="rounded border p-1" onClick={() => toggleTrash(t.id)}>
               {t.trashed ? (
