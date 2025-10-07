@@ -1,4 +1,4 @@
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "firebase/firestore";
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, getDoc } from "firebase/firestore";
 import { db } from "./firebase";
 import { Thing } from "@/types";
 
@@ -35,3 +35,15 @@ export async function deleteThing(id: string) {
 }
 
 // Item
+// Create
+export async function addItem(thingID: string) {
+  const ref = doc(db, "things", thingID);
+  const snapshot = await getDoc(ref);
+  if (snapshot.exists()) {
+    const thing = snapshot.data();
+    const newItem = { id: Date.now().toString(), text: "New Item" };
+    const items = [...thing.items, newItem];
+    const newThing = { ...thing, items };
+    await updateDoc(ref, newThing);
+  }
+}
