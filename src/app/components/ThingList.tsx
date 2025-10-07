@@ -9,8 +9,8 @@ import { Trash } from "lucide-react";
 
 import { useEffect, useState } from "react";
 // import { addThing } from "../firebase/addThing";
-import { getThings } from "../firebase/getThings";
-import { Thing } from "../types";
+// import { getThings } from "../firebase/getThings";
+// import { Thing } from "../types";
 
 const circleBtn = cva(
   "flex items-center justify-center rounded-full leading-none w-8 h-8 text-base bg-blue-500 text-white inline-block ml-2",
@@ -32,7 +32,7 @@ export default function ThingList() {
 
   // const things = useThingsStore((state) => state.things);
   const view = useThingsStore((state) => state.view);
-  const addThing = useThingsStore((state) => state.addThing);
+  // const addThing = useThingsStore((state) => state.addThing);
 
   const toggleTrash = useThingsStore((state) => state.toggleTrash);
   // const moveUp = useThingsStore((state) => state.moveUp);

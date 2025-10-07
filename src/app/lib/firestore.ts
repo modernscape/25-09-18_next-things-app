@@ -2,6 +2,7 @@ import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, order
 import { db } from "./firebase";
 import { Thing } from "@/types";
 
+// Thing
 // Create
 export async function addThing(title: string) {
   return await addDoc(collection(db, "things"), {
@@ -32,3 +33,5 @@ export async function deleteThing(id: string) {
   const ref = doc(db, "things", id);
   await deleteDoc(ref);
 }
+
+// Item
