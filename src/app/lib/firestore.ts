@@ -1,4 +1,4 @@
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, getDoc } from "firebase/firestore";
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, getDoc, arrayUnion } from "firebase/firestore";
 import { db } from "./firebase";
 import { Thing } from "@/types";
 
@@ -36,7 +36,7 @@ export async function deleteThing(id: string) {
 
 // Item
 // Create
-export async function addItem(thingID: string) {
+export async function addItem_OLD(thingID: string) {
   const ref = doc(db, "things", thingID);
   const snapshot = await getDoc(ref);
   if (snapshot.exists()) {
@@ -47,3 +47,25 @@ export async function addItem(thingID: string) {
     await updateDoc(ref, newThing);
   }
 }
+
+export async function addItem(thingID: string, text: string = "New Item") {
+  const ref = doc(db, "things", thingID);
+  const newItem = { id: Date.now().toString(), text };
+
+  await updateDoc(ref, {
+    items: arrayUnion(newItem),
+  });
+}
+
+// export async function addItem(thingID: string) {
+//   const ref = doc(db, "things", thingID);
+//   const snapshot = await getDoc(ref);
+//   if (!snapshot.exists()) return;
+
+//   const thing = snapshot.data() as Thing;
+//   const newItem = { id: Date.now().toString(), text: "New Item" };
+
+//   await updateDoc(ref, {
+//     items: [...thing.items, newItem], // itemsだけ更新
+//   });
+// }
