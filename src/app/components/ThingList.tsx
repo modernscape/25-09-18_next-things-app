@@ -1,7 +1,7 @@
 // components/ThingList.tsx
 "use client";
 
-import { updateThing, deleteThing, addThing, subscribeThings, addItem } from "../lib/firestore";
+import { updateThing, deleteThing, addThing, subscribeThings, addItem, updateItem } from "../lib/firestore";
 import { useThingsStore } from "../store/thingsStore";
 import { cva } from "class-variance-authority";
 import AutoWidthInput from "./AutoWidthInput";
