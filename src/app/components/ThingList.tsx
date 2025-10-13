@@ -1,14 +1,11 @@
 // components/ThingList.tsx
 "use client";
 
-import { updateThing, addThing, addItem, updateItem } from "../lib/firestore";
+import { updateThing, addThing, addItem, updateItem, subscribeThings } from "../lib/firestore";
 import { useThingsStore } from "../store/thingsStore";
 import { cva } from "class-variance-authority";
 import AutoWidthInput from "./AutoWidthInput";
 import { Trash } from "lucide-react";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../lib/firebase";
-import { Thing } from "@/types";
 import { useEffect, useState } from "react";
 
 const circleBtn = cva(
@@ -32,19 +29,24 @@ export default function ThingList() {
 
   const toggleTrash = useThingsStore((state) => state.toggleTrash);
 
+  // []なので初回のみ実行
   useEffect(() => {
-    const ref = collection(db, "things");
-    console.log("useEffect");
-    const unsub = onSnapshot(ref, (snapshot) => {
-      const things = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Thing[];
-      setThings(things);
-    });
+    const unsubscribe = subscribeThings(setThings);
+    return () => unsubscribe();
+  }, [setThings]);
 
-    return unsub;
-  }, []);
+  // useEffect(() => {
+  //   const ref = collection(db, "things");
+  //   const unsub = onSnapshot(ref, (snapshot) => {
+  //     const things = snapshot.docs.map((doc) => ({
+  //       id: doc.id,
+  //       ...doc.data(),
+  //     })) as Thing[];
+  //     setThings(things);
+  //   });
+
+  //   return unsub;
+  // }, []);
 
   const [newTitle, setNewTitle] = useState("");
 
