@@ -50,18 +50,6 @@ export async function deleteThing(id: string) {
 
 // Item
 // Create
-// export async function addItem_OLD(thingID: string) {
-//   const ref = doc(db, "things", thingID);
-//   const snapshot = await getDoc(ref);
-//   if (snapshot.exists()) {
-//     const thing = snapshot.data();
-//     const newItem = { id: Date.now().toString(), text: "New Item" };
-//     const items = [...thing.items, newItem];
-//     const newThing = { ...thing, items };
-//     await updateDoc(ref, newThing);
-//   }
-// }
-
 export async function addItem(thingID: string, text: string = "New Item") {
   const ref = doc(db, KEY_THINGS, thingID);
   const newItem = { id: Date.now().toString(), text };
@@ -71,6 +59,7 @@ export async function addItem(thingID: string, text: string = "New Item") {
   });
 }
 
+// Update
 export async function updateItem(thingID: string, itemID: string, newTitle: string) {
   const ref = doc(db, KEY_THINGS, thingID);
   const snapshot = await getDoc(ref);
@@ -80,28 +69,47 @@ export async function updateItem(thingID: string, itemID: string, newTitle: stri
   const oldItem = thing.items.find((item) => item.id === itemID);
   if (!oldItem) return;
 
-  const newItem = { ...oldItem, title: newTitle };
+  if (newTitle === "") {
+    await updateDoc(ref, {
+      items: arrayRemove(oldItem),
+    });
+  } else {
+    const newItem = { ...oldItem, text: newTitle };
 
-  await updateDoc(ref, {
-    items: arrayRemove(oldItem),
-  });
-  await updateDoc(ref, {
-    items: arrayUnion(newItem),
-  });
+    await updateDoc(ref, {
+      items: arrayRemove(oldItem),
+    });
+    await updateDoc(ref, {
+      items: arrayUnion(newItem),
+    });
+  }
 }
 
-// arrayRemove
-export async function removeItem(thingID: string, itemID: string) {}
-
-// export async function addItem(thingID: string) {
+// export async function updateItem(thingID: string, itemID: string, newTitle: string) {
 //   const ref = doc(db, "things", thingID);
+
+//   await runTransaction(db, async (transaction) => {
+//     const snapshot = await transaction.get(ref);
+//     if (!snapshot.exists()) return;
+
+//     const thing = snapshot.data() as Thing;
+//     const items = thing.items.map((item) => (item.id === itemID ? { ...item, text: newTitle } : item));
+
+//     transaction.update(ref, { items });
+//   });
+// }
+
+// Remove
+//  async function removeItem(thingID: string, itemID: string) {
+//   const ref = doc(db, KEY_THINGS, thingID);
 //   const snapshot = await getDoc(ref);
-//   if (!snapshot.exists()) return;
+//   if (!snapshot) return;
 
 //   const thing = snapshot.data() as Thing;
-//   const newItem = { id: Date.now().toString(), text: "New Item" };
+//   const oldItem = thing.items.find((item) => item.id === itemID);
+//   if (!oldItem) return;
 
 //   await updateDoc(ref, {
-//     items: [...thing.items, newItem], // itemsだけ更新
+//     items: arrayRemove(oldItem),
 //   });
 // }

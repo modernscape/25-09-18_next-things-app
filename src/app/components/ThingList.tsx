@@ -1,16 +1,15 @@
 // components/ThingList.tsx
 "use client";
 
-import { updateThing, deleteThing, addThing, subscribeThings, addItem, updateItem } from "../lib/firestore";
+import { updateThing, addThing, addItem, updateItem } from "../lib/firestore";
 import { useThingsStore } from "../store/thingsStore";
 import { cva } from "class-variance-authority";
 import AutoWidthInput from "./AutoWidthInput";
 import { Trash } from "lucide-react";
-
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../lib/firebase";
+import { Thing } from "@/types";
 import { useEffect, useState } from "react";
-// import { addThing } from "../firebase/addThing";
-// import { getThings } from "../firebase/getThings";
-// import { Thing } from "../types";
 
 const circleBtn = cva(
   "flex items-center justify-center rounded-full leading-none w-8 h-8 text-base bg-blue-500 text-white inline-block ml-2",
@@ -26,26 +25,26 @@ const circleBtn = cva(
 );
 
 export default function ThingList() {
-  // const [things, setThings] = useState<Thing[]>([]);
   const things = useThingsStore((state) => state.things);
   const setThings = useThingsStore((state) => state.setThings);
 
-  // const things = useThingsStore((state) => state.things);
   const view = useThingsStore((state) => state.view);
-  // const addThing = useThingsStore((state) => state.addThing);
 
   const toggleTrash = useThingsStore((state) => state.toggleTrash);
-  // const moveUp = useThingsStore((state) => state.moveUp);
-  // const moveDown = useThingsStore((state) => state.moveDown);
-  // const updateThingTitle = useThingsStore((state) => state.updateThingTitle);
-  // const addItem = useThingsStore((state) => state.addItem);
-  // const updateItem = useThingsStore((state) => state.updateItem);
 
-  // []なので初回のみ実行
   useEffect(() => {
-    const unsubscribe = subscribeThings(setThings);
-    return () => unsubscribe();
-  }, [setThings]);
+    const ref = collection(db, "things");
+    console.log("useEffect");
+    const unsub = onSnapshot(ref, (snapshot) => {
+      const things = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Thing[];
+      setThings(things);
+    });
+
+    return unsub;
+  }, []);
 
   const [newTitle, setNewTitle] = useState("");
 
