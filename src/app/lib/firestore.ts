@@ -19,18 +19,19 @@ const KEY_THINGS = "things";
 
 // Thing
 // Create
-export async function addThing(title: string) {
+export async function addThing(title: string, order: number) {
   return await addDoc(collection(db, KEY_THINGS), {
     title,
     items: [],
     trashed: false,
+    order: order,
     createdAt: new Date(),
   });
 }
 
 // Read (購読)
 export function subscribeThings(callback: (things: Thing[]) => void) {
-  const q = query(collection(db, KEY_THINGS), orderBy("createdAt", "asc"));
+  const q = query(collection(db, KEY_THINGS), orderBy("order", "asc"));
   return onSnapshot(q, (snapshot) => {
     const data = snapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() } as Thing));
     callback(data);
@@ -88,8 +89,10 @@ export async function updateItem(thingID: string, itemID: string, newTitle: stri
 
 // moveUp, moveUDown
 export async function moveThing(thingID: string, up: boolean) {
-  const thingsCol = collection(db, KEY_THINGS);
-  const snapshot = await getDocs(thingsCol);
+  const q = query(collection(db, KEY_THINGS), orderBy("order", "asc"));
+
+  // const thingsCol = collection(db, KEY_THINGS);
+  const snapshot = await getDocs(q);
   const things = snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
@@ -98,6 +101,8 @@ export async function moveThing(thingID: string, up: boolean) {
   const index = things.findIndex((t) => t.id === thingID);
   const current = things[index];
   const currentRef = doc(db, KEY_THINGS, current.id);
+
+  console.log(index);
 
   if (up) {
     if (index <= 0) return;
