@@ -1,5 +1,5 @@
 // dummyData.ts
-import { Thing } from "./types";
+import { Thing } from "./_types";
 
 export const dummyThings: Thing[] = [
   { id: Date.now().toString(), title: "Thing 1", items: ["item1", "item2"], order: 1, trashed: false },

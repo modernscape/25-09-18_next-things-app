@@ -1,6 +1,6 @@
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../lib/firebase";
-import { Thing } from "../types";
+import { Thing } from "../_types";
 
 export async function _getThings() {
   const querySnapshot = await getDocs(collection(db, "things"));
