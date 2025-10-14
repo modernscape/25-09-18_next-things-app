@@ -1,7 +1,7 @@
 // components/ThingList.tsx
 "use client";
 
-import { updateThing, addThing, addItem, updateItem, subscribeThings } from "../lib/firestore";
+import { updateThing, addThing, addItem, updateItem, subscribeThings, moveThing } from "../lib/firestore";
 import { useThingsStore } from "../store/thingsStore";
 import { cva } from "class-variance-authority";
 import AutoWidthInput from "./AutoWidthInput";
@@ -123,12 +123,12 @@ export default function ThingList() {
               )}
             </button>
             {i > 0 && (
-              <button className={circleBtn({ color: "red" })} onClick={() => moveUp(t.id)}>
+              <button className={circleBtn({ color: "red" })} onClick={() => moveThing(t.id, true)}>
                 ↑
               </button>
             )}
             {view === "all" && i < things.length - 1 && (
-              <button className={circleBtn({ color: "blue" })} onClick={() => moveDown(t.id)}>
+              <button className={circleBtn({ color: "blue" })} onClick={() => moveThing(t.id, false)}>
                 ↓
               </button>
             )}

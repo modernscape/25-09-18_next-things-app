@@ -86,7 +86,8 @@ export async function updateItem(thingID: string, itemID: string, newTitle: stri
   }
 }
 
-export async function moveUpThing(thingID: string) {
+// moveUp, moveUDown
+export async function moveThing(thingID: string, up: boolean) {
   const thingsCol = collection(db, KEY_THINGS);
   const snapshot = await getDocs(thingsCol);
   const things = snapshot.docs.map((doc) => ({
@@ -95,35 +96,26 @@ export async function moveUpThing(thingID: string) {
   })) as Thing[]; // things
 
   const index = things.findIndex((t) => t.id === thingID);
-  if (index <= 0) return;
-
   const current = things[index];
-  const prev = things[index - 1];
-
   const currentRef = doc(db, KEY_THINGS, current.id);
-  const prevRef = doc(db, KEY_THINGS, prev.id);
 
-  await Promise.all([
-    updateDoc(currentRef, { order: prev.order }), //
-    updateDoc(prevRef, { order: current.order }),
-  ]);
+  if (up) {
+    if (index <= 0) return;
+    const prev = things[index - 1];
+    const prevRef = doc(db, KEY_THINGS, prev.id);
+
+    await Promise.all([
+      updateDoc(currentRef, { order: prev.order }), //
+      updateDoc(prevRef, { order: current.order }),
+    ]);
+  } else {
+    if (index >= things.length - 1) return;
+    const next = things[index + 1];
+    const nextRef = doc(db, KEY_THINGS, next.id);
+
+    await Promise.all([
+      updateDoc(currentRef, { order: next.order }), //
+      updateDoc(nextRef, { order: current.order }),
+    ]);
+  }
 }
-
-// export function subscribeThings(callback: (things: Thing[]) => void) {
-//   const q = query(collection(db, KEY_THINGS), orderBy("createdAt", "asc"));
-//   return onSnapshot(q, (snapshot) => {
-//     const data = snapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() } as Thing));
-//     callback(data);
-//   });
-// }
-
-export async function moveDownThing(thingID: string) {}
-
-// moveUp: (id: string) => {
-//   const things = [...get().things];
-//   const index = things.findIndex((t) => t.id === id);
-//   if (index > 0) {
-//     [things[index - 1], things[index]] = [things[index], things[index - 1]];
-//     set({ things });
-//   }
-// },
