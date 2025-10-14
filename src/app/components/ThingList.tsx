@@ -56,6 +56,7 @@ export default function ThingList() {
             className="bg-slate-900 text-white px-6 py-2 rounded hover:opacity-50"
             onClick={() => {
               addThing(newTitle, things.length);
+              setNewTitle("");
             }}
           >
             追加
