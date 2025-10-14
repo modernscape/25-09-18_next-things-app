@@ -73,6 +73,29 @@ export default function ThingList() {
           >
             追加
           </button>
+
+          {/* <input
+            type="text"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            placeholder="新しいThingタイトル"
+            style={{ marginRight: "0.5rem" }}
+            className="w-100"
+          />
+          <button
+            className="bg-slate-900 text-white px-6 py-2 rounded hover:opacity-50"
+            onClick={async () => {
+              if (newTitle.trim() === "") return; // 空文字は追加しない
+              try {
+                await addThing(newTitle.trim()); // Firestore に追加
+                setNewTitle(""); // 入力欄をクリア
+              } catch (err) {
+                console.error("Thing の追加に失敗:", err);
+              }
+            }}
+          >
+            追加
+          </button> */}
         </div>
       )}
 

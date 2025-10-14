@@ -20,7 +20,7 @@ const circleBtn = cva(
   }
 );
 
-export default function ThingList() {
+export default function ThingList_OK() {
   const things = useThingsStore((state) => state.things);
   const view = useThingsStore((state) => state.view);
   const addThing = useThingsStore((state) => state.addThing);

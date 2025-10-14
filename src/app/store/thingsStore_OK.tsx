@@ -22,7 +22,7 @@ interface ThingsState {
   updateItem: (thingId: string, itemId: string, newItem: string) => void;
 }
 
-export const useThingsStore = create<ThingsState>()(
+export const useThingsStore_OK = create<ThingsState>()(
   persist(
     (set, get) => ({
       things: [],
