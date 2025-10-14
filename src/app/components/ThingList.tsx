@@ -35,19 +35,6 @@ export default function ThingList() {
     return () => unsubscribe();
   }, [setThings]);
 
-  // useEffect(() => {
-  //   const ref = collection(db, "things");
-  //   const unsub = onSnapshot(ref, (snapshot) => {
-  //     const things = snapshot.docs.map((doc) => ({
-  //       id: doc.id,
-  //       ...doc.data(),
-  //     })) as Thing[];
-  //     setThings(things);
-  //   });
-
-  //   return unsub;
-  // }, []);
-
   const [newTitle, setNewTitle] = useState("");
 
   const filtered = things.filter((t) => (view === "all" ? !t.trashed : t.trashed));
