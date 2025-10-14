@@ -90,8 +90,6 @@ export async function updateItem(thingID: string, itemID: string, newTitle: stri
 // moveUp, moveUDown
 export async function moveThing(thingID: string, up: boolean) {
   const q = query(collection(db, KEY_THINGS), orderBy("order", "asc"));
-
-  // const thingsCol = collection(db, KEY_THINGS);
   const snapshot = await getDocs(q);
   const things = snapshot.docs.map((doc) => ({
     id: doc.id,
