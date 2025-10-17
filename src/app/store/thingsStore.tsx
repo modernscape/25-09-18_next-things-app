@@ -1,13 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { Thing } from "@/types";
 
-export interface Thing {
-  id: string;
-  title: string;
-  items: { id: string; text: string }[];
-  order: number;
-  trashed: boolean;
-}
+// export interface Thing {
+//   id: string;
+//   title: string;
+//   items: { id: string; text: string }[];
+//   order: number;
+//   trashed: boolean;
+// }
 
 interface ThingsState {
   things: Thing[];
@@ -15,7 +16,7 @@ interface ThingsState {
   view: "all" | "trash";
   // addThing: (title: string) => void;
   toggleTrash: (id: string) => void;
-  // setView: (view: "all" | "trash") => void;
+  setView: (view: "all" | "trash") => void;
   // moveUp: (id: string) => void;
   // moveDown: (id: string) => void;
   // updateThingTitle: (id: string, newTitle: string) => void;
