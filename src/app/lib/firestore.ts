@@ -61,8 +61,6 @@ export async function addItem(thingID: string, text: string = "New Item") {
   });
 }
 
-// Read
-
 // Update、Delete
 export async function updateItem(thingID: string, itemID: string, newText: string) {
   const thingRef = doc(db, key_things, thingID); // thing
