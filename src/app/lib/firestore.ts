@@ -61,7 +61,9 @@ export async function addItem(thingID: string, text: string = "New Item") {
   });
 }
 
-// Update
+// Read
+
+// Update、Delete
 export async function updateItem(thingID: string, itemID: string, newText: string) {
   const thingRef = doc(db, key_things, thingID); // thing
   const snapshot = await getDoc(thingRef); // thing
@@ -94,8 +96,6 @@ export async function moveThing(thingID: string, up: boolean) {
   const index = things.findIndex((t) => t.id === thingID);
   const current = things[index];
   const currentRef = doc(db, key_things, current.id);
-
-  console.log(index);
 
   if (up) {
     if (index <= 0) return;
