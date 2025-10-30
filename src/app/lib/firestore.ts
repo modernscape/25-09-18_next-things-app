@@ -83,35 +83,60 @@ export async function updateItem(thingID: string, itemID: string, newText: strin
 }
 
 // moveUp, moveUDown
+import { runTransaction } from "firebase/firestore";
+
 export async function moveThing(thingID: string, up: boolean) {
   const q = query(collection(db, key_things), orderBy("order", "asc"));
   const snapshot = await getDocs(q);
   const things = snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
-  })) as Thing[]; // things
+  })) as Thing[];
 
   const index = things.findIndex((t) => t.id === thingID);
-  const current = things[index];
-  const currentRef = doc(db, key_things, current.id);
+  if (index === -1) return;
 
-  if (up) {
-    if (index <= 0) return;
-    const prev = things[index - 1];
-    const prevRef = doc(db, key_things, prev.id);
+  const swapIndex = up ? index - 1 : index + 1;
+  if (swapIndex < 0 || swapIndex >= things.length) return;
 
-    await Promise.all([
-      updateDoc(currentRef, { order: prev.order }), //
-      updateDoc(prevRef, { order: current.order }),
-    ]);
-  } else {
-    if (index >= things.length - 1) return;
-    const next = things[index + 1];
-    const nextRef = doc(db, key_things, next.id);
+  const currentRef = doc(db, key_things, things[index].id);
+  const targetRef = doc(db, key_things, things[swapIndex].id);
 
-    await Promise.all([
-      updateDoc(currentRef, { order: next.order }), //
-      updateDoc(nextRef, { order: current.order }),
-    ]);
-  }
+  await runTransaction(db, async (tx) => {
+    tx.update(currentRef, { order: swapIndex });
+    tx.update(targetRef, { order: index });
+  });
 }
+
+// export async function moveThing(thingID: string, up: boolean) {
+//   const q = query(collection(db, key_things), orderBy("order", "asc"));
+//   const snapshot = await getDocs(q);
+//   const things = snapshot.docs.map((doc) => ({
+//     id: doc.id,
+//     ...doc.data(),
+//   })) as Thing[]; // things
+
+//   const index = things.findIndex((t) => t.id === thingID);
+//   const current = things[index];
+//   const currentRef = doc(db, key_things, current.id);
+
+//   if (up) {
+//     if (index <= 0) return;
+//     const prev = things[index - 1];
+//     const prevRef = doc(db, key_things, prev.id);
+
+//     await Promise.all([
+//       updateDoc(currentRef, { order: prev.order }), //
+//       updateDoc(prevRef, { order: current.order }),
+//     ]);
+//   } else {
+//     if (index >= things.length - 1) return;
+//     const next = things[index + 1];
+//     const nextRef = doc(db, key_things, next.id);
+
+//     await Promise.all([
+//       updateDoc(currentRef, { order: next.order }), //
+//       updateDoc(nextRef, { order: current.order }),
+//     ]);
+//   }
+// }
