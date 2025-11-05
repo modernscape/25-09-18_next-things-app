@@ -61,7 +61,28 @@ export async function addItem(thingID: string, text: string = "New Item") {
   });
 }
 
+
+
 // Update、Delete
+// Firestore 的に安全な書き方（同時編集対策）
+export async function updateItemAtIndexWithTx(thingID: string, index: number, newItem: string) {
+  const thingRef = doc(db, key_things, thingID)
+
+  await runTransaction(db, async (transaction) => {
+    const snap = await transaction.get(thingRef)
+    if (!snap.exists()) return
+
+    const data = snap.data()
+    const items = data.items || []
+
+    if (index < 0 || index >= items.length) return
+
+    items[index] = { ...items[index], text: newItem }
+    transaction.update(thingRef, { items })
+  })
+}
+
+// old
 export async function updateItem(thingID: string, itemID: string, newText: string) {
   const thingRef = doc(db, key_things, thingID); // thing
   const snapshot = await getDoc(thingRef); // thing
