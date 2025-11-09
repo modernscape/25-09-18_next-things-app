@@ -68,7 +68,7 @@ export default function ThingList() {
       {filtered.map((t, i) => (
         <div key={t.id} className="border border-[#ddd] p-2 mb-2">
           <div className=" text-3xl font-bold mb-4">
-            {/* タイトル変更 */}
+            {/* タイトル編集 */}
             <AutoWidthInput value={t.title} onConfirm={(val) => updateThing(t.id, { title: val })} font="inherit" />
           </div>
           {/* （3）アイテム一覧 */}
